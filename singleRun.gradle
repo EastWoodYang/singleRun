@@ -1,0 +1,15 @@
+singleRun {
+
+    runDir 'run'
+
+    LoginActivity {
+        target 'com.eastwood.demo.login.LoginActivity'
+        modules ':login'
+    }
+
+    SettingsActivity {
+        target 'com.eastwood.demo.settings.SettingsActivity'
+        modules ':settings'
+    }
+
+}

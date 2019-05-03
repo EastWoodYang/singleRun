@@ -1,0 +1,17 @@
+includeBuild './singleRun-plugin'
+include ':app', ':login', ':settings'
+
+buildscript {
+    dependencies {
+        def jar = file('./singleRun-plugin/build/libs/singleRun-plugin.jar')
+        ext.hasGenerated = jar.exists()
+        if (ext.hasGenerated) {
+            classpath files(jar)
+        }
+    }
+}
+
+if (buildscript.dependencies.ext.hasGenerated) {
+    apply plugin: 'single-run-settings'
+    apply from: 'singleRun.gradle'
+}
