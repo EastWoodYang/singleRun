@@ -28,12 +28,10 @@ class SingleRunSettingsPlugin implements Plugin<Settings> {
                 runDir = new File(projectDir, jumperExtension.runDir)
             }
 
-            settings.gradle.startParameter.taskNames.each {
-                if (it == 'clean') {
-                    boolean result = runDir.deleteDir()
-                    if (!result) {
-                        throw new RuntimeException("unable to delete dir " + runDir.absolute)
-                    }
+            if (settings.gradle.startParameter.taskNames.isEmpty()) {
+                boolean result = runDir.deleteDir()
+                if (!result) {
+                    throw new RuntimeException("unable to delete dir " + runDir.absolute)
                 }
             }
 
