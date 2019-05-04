@@ -23,10 +23,20 @@ class SingleRunSettingsPlugin implements Plugin<Settings> {
             SingleRunExtension jumperExtension = new SingleRunExtension()
             ConfigureUtil.configure(closure, jumperExtension)
 
-            def runDir = new File(projectDir, 'run-temp')
+            def runDir = new File(projectDir, 'run')
             if (jumperExtension.runDir != null) {
                 runDir = new File(projectDir, jumperExtension.runDir)
             }
+
+            settings.gradle.startParameter.taskNames.each {
+                if (it == 'clean') {
+                    boolean result = runDir.deleteDir()
+                    if (!result) {
+                        throw new RuntimeException("unable to delete dir " + runDir.absolute)
+                    }
+                }
+            }
+
             if (!runDir.exists()) {
                 runDir.mkdir()
             }
@@ -55,7 +65,11 @@ class SingleRunSettingsPlugin implements Plugin<Settings> {
                     InputStream is = SingleRunSettingsPlugin.class.getResourceAsStream(ANDROID_MANIFEST_TEMPLATE_PATH);
                     Scanner scanner = new Scanner(is)
                     String template = scanner.useDelimiter("\\A").next()
-                    String fileContent = template
+                    String applicationReplaceHolder = ""
+                    if (singleRunConfig.applicationName != null) {
+                        applicationReplaceHolder = "android:name=\"${singleRunConfig.applicationName}\"\ntools:replace=\"android:name\""
+                    }
+                    String fileContent = template.replace("%APPLICATION_NAME%", applicationReplaceHolder)
                     androidManifestFile.setText(fileContent)
                 }
 
@@ -66,7 +80,25 @@ class SingleRunSettingsPlugin implements Plugin<Settings> {
                     InputStream is = SingleRunSettingsPlugin.class.getResourceAsStream(JUMPER_ACTIVITY_TEMPLATE_PATH);
                     Scanner scanner = new Scanner(is)
                     String template = scanner.useDelimiter("\\A").next()
-                    String fileContent = template.replace("%TARGET%", singleRunConfig.target)
+
+                    String bundle = ''
+                    singleRunConfig.bundle.each {
+                        if (it.value instanceof String) {
+                            bundle += '        intent.putExtra("' + it.key + '", "' + it.value + '");\n'
+                        } else if (it.value instanceof Float) {
+                            bundle += '        intent.putExtra("' + it.key + '", ' + it.value + 'f);\n'
+                        } else if (it.value instanceof Long) {
+                            bundle += '        intent.putExtra("' + it.key + '", ' + it.value + 'L);\n'
+                        } else if (it.value instanceof Double) {
+                            bundle += '        intent.putExtra("' + it.key + '", ' + it.value + 'd);\n'
+                        } else {
+                            bundle += '        intent.putExtra("' + it.key + '", ' + it.value + ');\n'
+                        }
+                    }
+
+                    String fileContent = template
+                            .replace("%TARGET%", singleRunConfig.target)
+                            .replace("%BUNDLE%", bundle)
 
                     singleRunActivityFile.setText(fileContent)
                 }
@@ -83,5 +115,7 @@ class SingleRunSettingsPlugin implements Plugin<Settings> {
                 settings.project(":${moduleName}").setProjectDir(new File(runDir, moduleName))
             }
         }
+
+        settings.apply from: 'singleRun.gradle'
     }
 }

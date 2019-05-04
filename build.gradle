@@ -28,4 +28,3 @@ task clean(type: Delete) {
 }
 
 apply plugin: 'single-run-build'
-apply from : 'singleRun.gradle'

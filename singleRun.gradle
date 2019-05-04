@@ -8,8 +8,10 @@ singleRun {
     }
 
     SettingsActivity {
-        target 'com.eastwood.demo.settings.SettingsActivity'
         modules ':settings'
+        applicationName 'com.eastwood.demo.settings.SettingsApplication'
+        target 'com.eastwood.demo.settings.SettingsActivity'
+        bundle booleanKey: true, intKey: 1, floatKey: 1.0f, longKey: 1L, doubleKey: 2.0d, stringKey: 'string'
     }
 
 }

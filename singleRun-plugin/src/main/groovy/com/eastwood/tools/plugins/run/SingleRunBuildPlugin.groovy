@@ -20,6 +20,8 @@ class SingleRunBuildPlugin implements Plugin<Project> {
             singleRunConfigs = singleRunExtension.getSingleRunConfigs()
         }
 
+        project.apply from: 'singleRun.gradle'
+
         project.afterEvaluate {
             if (singleRunConfigs != null) {
                 project.getAllprojects().each {
