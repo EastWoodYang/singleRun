@@ -7,14 +7,10 @@ android {
         applicationId "%APPLICATION_ID%"
         minSdkVersion 15
         targetSdkVersion 28
-    }
-
-    sourceSets {
-        main {
-            java.srcDirs = ['src/java']
-            res.srcDirs = ['src/res']
-            manifest.srcFile 'src/AndroidManifest.xml'
-        }
+        versionCode 1
+        versionName "1.0"
     }
 
 }
+
+%EXTEND_BUILD%

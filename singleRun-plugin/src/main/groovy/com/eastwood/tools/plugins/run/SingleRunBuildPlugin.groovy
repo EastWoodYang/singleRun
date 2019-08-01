@@ -20,6 +20,11 @@ class SingleRunBuildPlugin implements Plugin<Project> {
             singleRunConfigs = singleRunExtension.getSingleRunConfigs()
         }
 
+        def runScript = new File(project.rootDir, 'singleRun.gradle')
+        if (!runScript.exists()) {
+            return
+        }
+
         project.apply from: 'singleRun.gradle'
 
         project.afterEvaluate {

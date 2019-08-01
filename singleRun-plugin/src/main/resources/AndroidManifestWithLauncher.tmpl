@@ -77,6 +77,18 @@
 
     <application
         android:label="%APP_NAME%"
-        %APPLICATION_NAME% />
+        %APPLICATION_NAME%>
+
+        <activity android:name=".SingleRunActivity">
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+        </activity>
+
+    </application>
 
 </manifest>

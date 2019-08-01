@@ -16,7 +16,7 @@ dependencies {
 apply plugin: 'maven'
 
 def groupId = 'com.eastwood.tools.plugins'
-def artifactId = 'jumper'
+def artifactId = 'singleRun'
 def version = '1.0.0'
 
 def localReleaseDest = "${buildDir}/release/${version}"

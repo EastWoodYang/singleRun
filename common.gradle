@@ -1,0 +1,10 @@
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        applicationId "run.LoginActivity"
+        minSdkVersion 15
+        targetSdkVersion 28
+    }
+
+}

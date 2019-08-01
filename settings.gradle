@@ -12,5 +12,5 @@ buildscript {
 }
 
 if (buildscript.dependencies.ext.hasGenerated) {
-    apply plugin: 'single-run-settings'
+    apply plugin: 'single-run'
 }

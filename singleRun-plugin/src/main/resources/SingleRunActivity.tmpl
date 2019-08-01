@@ -1,8 +1,12 @@
-package run;
+package singleRun;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 public class SingleRunActivity extends Activity {
@@ -10,6 +14,48 @@ public class SingleRunActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            boolean allGranted = checkPermissions();
+            if(allGranted) {
+                jump2Target();
+            } else {
+                requestPermissions();
+            }
+        } else {
+            jump2Target();
+        }
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean checkPermissions() {
+        %CHECK_PERMISSIONS%
+        return true;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void requestPermissions() {
+        String[] permissions = new String[]{%REQUEST_PERMISSIONS%        };
+        requestPermissions(permissions, 0);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        boolean allGranted = true;
+        for (int i = 0; i < grantResults.length; i++) {
+            if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                allGranted = false;
+            }
+        }
+
+        if (allGranted) {
+            jump2Target();
+        }
+    }
+
+    private void jump2Target() {
         String target = "%TARGET%";
 
         Class targetClass = null;
@@ -24,8 +70,7 @@ public class SingleRunActivity extends Activity {
         } else {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(target));
         }
-
-%BUNDLE%
+        %BUNDLE%
         startActivity(intent);
         finish();
     }
