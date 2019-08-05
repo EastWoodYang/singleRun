@@ -3,7 +3,7 @@ singleRun {
     LoginActivity {
         appName '登录'
         modules ':login'
-        buildScript 'test.gradle'
+        extendBuild 'common.gradle'
         target 'com.eastwood.demo.login.LoginActivity'
         params 'key':'value'
         needPermissions 'READ_EXTERNAL_STORAGE', 'READ_PHONE_STATE'
